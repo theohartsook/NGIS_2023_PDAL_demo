@@ -1,0 +1,41 @@
+{
+"pipeline": [
+	"NGIS_2023/NGIS_input.las",
+	{
+		"type": "filters.assign",
+		"value": "Classification=1",
+		"where": "Classification > 0"
+	},
+	{
+		"type": "filters.smrf",
+		"cell": "0.25",
+		"window": "36",
+		"threshold": "0.05",
+		"scalar": "1"
+	},
+	{
+		"type": "filters.hag_nn",
+		"count": "10"
+	},
+	{
+		"type": "filters.assign",
+		"value": "Classification=3",
+		"where": "Classification < 2 && HeightAboveGround > 0 && HeightAboveground <= 10"
+	},
+	{
+		"type": "filters.assign",
+		"value": "Classification=4",
+		"where": "Classification < 2 && HeightAboveGround > 10 && HeightAboveground <= 20"
+	},
+	{
+		"type": "filters.assign",
+		"value": "Classification=5",
+		"where": "Classification < 2 && HeightAboveGround > 20"
+	},
+	{
+		"type": "writers.las",
+		"filename": "NGIS_2023/NGIS_veg.las",
+		"extra_dims": "HeightAboveGround=float32"
+	}
+	]
+}
